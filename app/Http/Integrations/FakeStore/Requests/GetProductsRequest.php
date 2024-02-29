@@ -2,8 +2,10 @@
 
 namespace App\Http\Integrations\FakeStore\Requests;
 
+use App\DTO\Products\FakeStoreProductData;
 use Saloon\Enums\Method;
 use Saloon\Http\Request;
+use Saloon\Http\Response;
 
 class GetProductsRequest extends Request
 {
@@ -18,5 +20,10 @@ class GetProductsRequest extends Request
     public function resolveEndpoint(): string
     {
         return '/products';
+    }
+
+    public function createDtoFromResponse(Response $response): mixed
+    {
+        return FakeStoreProductData::collect($response->array());
     }
 }

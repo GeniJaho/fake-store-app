@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\DTO\Products\FakeStoreProductData;
 use App\Http\Integrations\FakeStore\FakeStoreConnector;
 use App\Http\Integrations\FakeStore\Requests\GetProductsRequest;
 use App\Models\Product;
@@ -23,26 +24,24 @@ class SyncFakeStoreProducts extends Command
      */
     protected $description = 'Syncs Fake Store products with the database.';
 
-    public function handle(): void
+    public function handle(FakeStoreConnector $connector): void
     {
-        $con = new FakeStoreConnector;
+        $response = $connector->send(new GetProductsRequest);
 
-        $response = $con->send(new GetProductsRequest);
+        /** @var FakeStoreProductData[] $products */
+        $products = $response->dtoOrFail();
 
-        collect($response->array())->chunk(1000)->each(function ($products) {
-            Product::upsert(
-                $products->map(fn ($product) => [
-                    'fake_store_id' => $product['id'],
-                    'title' => $product['title'],
-                    'price' => $product['price'],
-                    'description' => $product['description'],
-                    'category' => $product['category'],
-                    'image' => $product['image'],
-                    'rating_rate' => $product['rating']['rate'],
-                    'rating_count' => $product['rating']['count'],
-                ])->toArray(),
-                ['fake_store_id'],
-            );
+        collect($products)->chunk(1000)->each(function ($products) {
+            Product::upsert($products->map(fn (FakeStoreProductData $product) => [
+                'fake_store_id' => $product->id,
+                'title' => $product->title,
+                'price' => $product->price * 100,
+                'description' => $product->description,
+                'category' => $product->category,
+                'image' => $product->image,
+                'rating_rate' => $product->rating->rate,
+                'rating_count' => $product->rating->count,
+            ])->toArray(), ['fake_store_id']);
         });
     }
 }
