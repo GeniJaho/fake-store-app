@@ -6,6 +6,7 @@ use App\DTO\Products\FakeStoreProductData;
 use App\Http\Integrations\FakeStore\FakeStoreConnector;
 use App\Http\Integrations\FakeStore\Requests\GetProductsRequest;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use Illuminate\Console\Command;
 
 class SyncFakeStoreProducts extends Command
@@ -31,17 +32,34 @@ class SyncFakeStoreProducts extends Command
         /** @var FakeStoreProductData[] $products */
         $products = $response->dtoOrFail();
 
-        collect($products)->chunk(1000)->each(function ($products) {
-            Product::upsert($products->map(fn (FakeStoreProductData $product) => [
+        $this->syncCategories($products);
+
+        $categoryIds = ProductCategory::query()->pluck('id', 'name');
+
+        collect($products)->chunk(1000)->each(fn ($products) => Product::upsert(
+            $products->map(fn (FakeStoreProductData $product) => [
                 'fake_store_id' => $product->id,
                 'title' => $product->title,
                 'price' => $product->price * 100,
                 'description' => $product->description,
-                'category' => $product->category,
+                'category_id' => $categoryIds[$product->category],
                 'image' => $product->image,
                 'rating_rate' => $product->rating->rate,
                 'rating_count' => $product->rating->count,
-            ])->toArray(), ['fake_store_id']);
-        });
+            ])->toArray(),
+            ['fake_store_id']),
+        );
+    }
+
+    /**
+     * @param FakeStoreProductData[] $products
+     */
+    private function syncCategories(array $products): void
+    {
+        $categoryNames = collect($products)
+            ->map(fn (FakeStoreProductData $product) => ['name' => $product->category])
+            ->unique(fn (array $category) => $category['name']);
+
+        ProductCategory::query()->insertOrIgnore($categoryNames->toArray());
     }
 }

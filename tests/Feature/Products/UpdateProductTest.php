@@ -3,6 +3,7 @@
 use App\Actions\Products\StoreProductImageAction;
 use App\Exceptions\CannotStoreImageException;
 use App\Models\Product;
+use App\Models\ProductCategory;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
@@ -35,12 +36,13 @@ test('unauthenticated users can not update products', function () {
 it('updates a product', function () {
     $user = User::factory()->create();
     $image = UploadedFile::fake()->image('image.jpg');
+    $category = ProductCategory::factory()->create(['name' => 'Original Category']);
     $product = Product::factory()->create([
         'fake_store_id' => 1,
         'title' => 'Original Name',
         'price' => 1000,
         'description' => 'Original Description',
-        'category' => 'Original Category',
+        'category_id' => $category,
         'image' => 'Old Image URL',
         'rating_rate' => 4.5,
         'rating_count' => 100
@@ -52,10 +54,15 @@ it('updates a product', function () {
 
     $response->assertOk();
     $response->assertJson([
+        'id' => $product->id,
+        'fake_store_id' => 1,
         'title' => 'New Name',
         'price' => 25.12,
         'description' => 'New Description',
-        'category' => 'Original Category',
+        'category' => [
+            'id' => $category->id,
+            'name' => $category->name,
+        ],
         'image' => Storage::disk('public')->url("products/{$image->hashName()}"),
         'rating_rate' => 4.5,
         'rating_count' => 100,
@@ -64,7 +71,7 @@ it('updates a product', function () {
         ->title->toBe('New Name')
         ->price->toBe(25.12)
         ->description->toBe('New Description')
-        ->category->toBe('Original Category')
+        ->category_id->toBe($category->id)
         ->image->toBe(Storage::disk('public')->url("products/{$image->hashName()}"))
         ->rating_rate->toBe(4.5)
         ->rating_count->toBe(100);
@@ -74,8 +81,9 @@ it('updates a product', function () {
 
 it('only updates valid product properties', function () {
     $user = User::factory()->create();
+    $category = ProductCategory::factory()->create();
     $product = Product::factory()->create([
-        'category' => 'Original Category',
+        'category_id' => $category,
         'rating_rate' => 4.5,
         'rating_count' => 100
     ]);
@@ -88,7 +96,7 @@ it('only updates valid product properties', function () {
 
     $response->assertOk();
     expect($product->fresh())
-        ->category->toBe('Original Category')
+        ->category_id->toBe($category->id)
         ->rating_rate->toBe(4.5)
         ->rating_count->toBe(100);
 });
