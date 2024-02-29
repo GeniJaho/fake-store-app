@@ -4,6 +4,7 @@ declare(strict_types=1);
 
 use Rector\Caching\ValueObject\Storage\FileCacheStorage;
 use Rector\CodingStyle\Rector\ArrowFunction\StaticArrowFunctionRector;
+use Rector\CodingStyle\Rector\Catch_\CatchExceptionNameMatchingTypeRector;
 use Rector\CodingStyle\Rector\Closure\StaticClosureRector;
 use Rector\CodingStyle\Rector\Encapsed\EncapsedStringsToSprintfRector;
 use Rector\CodingStyle\Rector\PostInc\PostIncDecToPreIncDecRector;
@@ -47,6 +48,7 @@ return static function (RectorConfig $rectorConfig): void {
         StaticArrowFunctionRector::class,
         StaticClosureRector::class,
         EncapsedStringsToSprintfRector::class,
+        CatchExceptionNameMatchingTypeRector::class,
         __DIR__.'/app/Http/Middleware/RedirectIfAuthenticated.php',
     ]);
 

@@ -128,7 +128,7 @@ it('does not update the product if the image can not be saved', function () {
 
     $response = actingAs($user)->patchJson("/api/products/{$product->id}", getValidProductData());
 
-    $response->assertServerError();
+    $response->assertBadRequest();
     $response->assertJson(['message' => 'Could not store the image.']);
 
     expect($product->fresh()->toArray())->toEqualCanonicalizing($product->toArray());
