@@ -19,7 +19,7 @@ return new class extends Migration
             $table->text('description');
             $table->string('category');
             $table->string('image');
-            $table->float('rating_rate');
+            $table->float('rating_rate')->nullable();
             $table->unsignedInteger('rating_count');
             $table->timestamps();
         });
