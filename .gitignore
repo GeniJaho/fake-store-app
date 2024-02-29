@@ -4,6 +4,9 @@
 /public/hot
 /public/storage
 /storage/*.key
+/storage/phpstan
+/storage/pint.cache
+/storage/rector/cache
 /vendor
 .env
 .env.backup
