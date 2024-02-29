@@ -6,22 +6,23 @@ use App\Models\Product;
 use App\Models\ProductCategory;
 use Saloon\Http\Faking\MockClient;
 use Saloon\Http\Faking\MockResponse;
+
 use function Pest\Laravel\artisan;
 
 it('syncs fake store products with the database', function () {
     MockClient::global([
         GetProductsRequest::class => MockResponse::make(body: [
             [
-                "id" => 1,
-                "title" => "Backpack, Fits 15 Laptops",
-                "price" => 109.95,
-                "description" => "Your perfect pack for everyday use.",
-                "category" => "men's clothing",
-                "image" => "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-                "rating" => [
-                    "rate" => 3.9,
-                    "count" => 120
-                ]
+                'id' => 1,
+                'title' => 'Backpack, Fits 15 Laptops',
+                'price' => 109.95,
+                'description' => 'Your perfect pack for everyday use.',
+                'category' => "men's clothing",
+                'image' => 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+                'rating' => [
+                    'rate' => 3.9,
+                    'count' => 120,
+                ],
             ],
         ]),
     ]);
@@ -51,16 +52,16 @@ it('does not store a record twice', function () {
     MockClient::global([
         GetProductsRequest::class => MockResponse::make(body: [
             [
-                "id" => 1,
-                "title" => "Backpack, Fits 15 Laptops",
-                "price" => 109.95,
-                "description" => "Your perfect pack for everyday use.",
-                "category" => "men's clothing",
-                "image" => "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-                "rating" => [
-                    "rate" => 3.9,
-                    "count" => 120
-                ]
+                'id' => 1,
+                'title' => 'Backpack, Fits 15 Laptops',
+                'price' => 109.95,
+                'description' => 'Your perfect pack for everyday use.',
+                'category' => "men's clothing",
+                'image' => 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+                'rating' => [
+                    'rate' => 3.9,
+                    'count' => 120,
+                ],
             ],
         ]),
     ]);
@@ -77,16 +78,16 @@ it('updates the record if it has changed from the api', function () {
     MockClient::global([
         GetProductsRequest::class => MockResponse::make(body: [
             [
-                "id" => 1,
-                "title" => "Backpack, Fits 15 Laptops",
-                "price" => 109.95,
-                "description" => "Your perfect pack for everyday use.",
-                "category" => "men's clothing",
-                "image" => "https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg",
-                "rating" => [
-                    "rate" => 3.9,
-                    "count" => 120
-                ]
+                'id' => 1,
+                'title' => 'Backpack, Fits 15 Laptops',
+                'price' => 109.95,
+                'description' => 'Your perfect pack for everyday use.',
+                'category' => "men's clothing",
+                'image' => 'https://fakestoreapi.com/img/81fPKd-2AYL._AC_SL1500_.jpg',
+                'rating' => [
+                    'rate' => 3.9,
+                    'count' => 120,
+                ],
             ],
         ]),
     ]);

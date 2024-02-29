@@ -20,5 +20,6 @@ class UpdateProductData extends Data
         public string $description,
         #[Image, Max(2048), Dimensions(minWidth: 2, minHeight: 2)]
         public ?UploadedFile $image,
-    ) {}
+    ) {
+    }
 }

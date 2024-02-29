@@ -13,7 +13,7 @@ class StoreProductImageAction
      */
     public function run(?UploadedFile $image): ?string
     {
-        if ($image === null) {
+        if (! $image instanceof UploadedFile) {
             return null;
         }
 

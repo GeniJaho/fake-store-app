@@ -17,7 +17,8 @@ class ProductData extends Data
         public string $image,
         public ?float $rating_rate,
         public int $rating_count,
-    ) {}
+    ) {
+    }
 
     public static function fromModel(Product $product): self
     {

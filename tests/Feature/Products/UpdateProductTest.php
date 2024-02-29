@@ -7,6 +7,7 @@ use App\Models\ProductCategory;
 use App\Models\User;
 use Illuminate\Http\UploadedFile;
 use Illuminate\Support\Facades\Storage;
+
 use function Pest\Laravel\actingAs;
 use function Pest\Laravel\patchJson;
 
@@ -45,7 +46,7 @@ it('updates a product', function () {
         'category_id' => $category,
         'image' => 'Old Image URL',
         'rating_rate' => 4.5,
-        'rating_count' => 100
+        'rating_count' => 100,
     ]);
 
     $response = actingAs($user)->patchJson("/api/products/{$product->id}", getValidProductData([
@@ -85,16 +86,17 @@ it('only updates valid product properties', function () {
     $product = Product::factory()->create([
         'category_id' => $category,
         'rating_rate' => 4.5,
-        'rating_count' => 100
+        'rating_count' => 100,
     ]);
 
     $response = actingAs($user)->patchJson("/api/products/{$product->id}", getValidProductData([
         'category' => 'New Category',
         'rating_rate' => 4.5,
-        'rating_count' => 100
+        'rating_count' => 100,
     ]));
 
     $response->assertOk();
+
     expect($product->fresh())
         ->category_id->toBe($category->id)
         ->rating_rate->toBe(4.5)
@@ -112,6 +114,7 @@ it('does not change the image if not given in the request', function () {
     ]));
 
     $response->assertOk();
+
     expect($product->fresh())->image->toBe('Old Image URL');
 });
 
@@ -127,6 +130,7 @@ it('does not update the product if the image can not be saved', function () {
 
     $response->assertServerError();
     $response->assertJson(['message' => 'Could not store the image.']);
+
     expect($product->fresh()->toArray())->toEqualCanonicalizing($product->toArray());
 });
 
@@ -138,6 +142,7 @@ it('validates the request', function ($data, $error) {
 
     $response->assertUnprocessable();
     $response->assertJsonValidationErrors($error);
+
     expect($product->toArray())->toEqualCanonicalizing($product->fresh()->toArray());
 })->with([
     'title required' => [getValidProductData(['title' => '']), 'title'],
@@ -152,4 +157,3 @@ it('validates the request', function ($data, $error) {
     'image dimensions min width' => [getValidProductData(['image' => UploadedFile::fake()->image('image.jpg', 1)]), 'image'],
     'image dimensions min height' => [getValidProductData(['image' => UploadedFile::fake()->image('image.jpg', 100, 1)]), 'image'],
 ]);
-

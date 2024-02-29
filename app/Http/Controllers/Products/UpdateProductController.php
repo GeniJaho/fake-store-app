@@ -18,8 +18,7 @@ class UpdateProductController extends Controller
         Product $product,
         UpdateProductData $data,
         StoreProductImageAction $storeProductImageAction,
-    ): ProductData
-    {
+    ): ProductData {
         $imageUrl = $storeProductImageAction->run($data->image) ?? $product->image;
 
         $product->update([

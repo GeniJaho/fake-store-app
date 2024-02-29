@@ -52,7 +52,7 @@ class SyncFakeStoreProducts extends Command
     }
 
     /**
-     * @param FakeStoreProductData[] $products
+     * @param  FakeStoreProductData[]  $products
      */
     private function syncCategories(array $products): void
     {

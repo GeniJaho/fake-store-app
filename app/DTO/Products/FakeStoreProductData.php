@@ -14,5 +14,6 @@ class FakeStoreProductData extends Data
         public string $image,
         public string $category,
         public FakeStoreProductRatingData $rating,
-    ) {}
+    ) {
+    }
 }

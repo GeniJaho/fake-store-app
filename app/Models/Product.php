@@ -13,6 +13,9 @@ class Product extends Model
 
     protected $guarded = [];
 
+    /**
+     * @return BelongsTo<ProductCategory, Product>
+     */
     public function category(): BelongsTo
     {
         return $this->belongsTo(ProductCategory::class);
