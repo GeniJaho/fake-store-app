@@ -10,3 +10,6 @@ parameters:
 
     # Level 9 is the highest level
     level: 8
+
+    ignoreErrors:
+        - message: "#^Method (.*?) return type with generic class Illuminate\\\\Database\\\\Eloquent\\\\Casts\\\\Attribute does not specify its types\\: TGet, TSet$#"
