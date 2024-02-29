@@ -5,9 +5,10 @@
 1. Clone the repository
 2. You need to have PHP 8.2 installed
 3. Run `composer install`
-4. Run `php artisan key:generate`
-5. Run `php artisan migrate --seed`. It will show a token that you can use to make requests.
-6. Run `php artisan serve`
+4. Run `cp .env.example .env`
+5. Run `php artisan key:generate`
+6. Run `php artisan migrate --seed`. It will show a token that you can use to make requests.
+7. Run `php artisan serve`
 
 ## Syncing Products
 To sync products from the external API, you need to run the following command:
